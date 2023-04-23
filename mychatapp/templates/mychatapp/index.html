@@ -1,0 +1,119 @@
+{% extends "mychatapp/base.html" %}
+
+{% block content %}
+
+<div class="chat-container">
+    <div class="main">
+        <div class="logo">
+            ChatMe
+        </div>
+
+        <div class="sub-main">
+
+            <div class="main-user">
+                <a href="{% url 'edit_profile' %}">
+                    <img src="{{user.pic.url}}" alt="" />
+                </a>
+            </div>
+            <!-- <div class="main-user">
+                <img src="{{user.pic.url}}" alt="profile picture" />
+            
+            </div> -->
+            <p>@{{request.user.username}}</p>
+        </div>
+    </div>
+
+    <div class="header">Messages</div>
+
+    <div class="friends-container">
+
+        {% for friend in friends %}
+
+        <a href=" {% url 'detail' friend.profile.id %} " style="color:black; text-decoration: none">
+            <div class="friends">
+                <div class="pic">
+                    <img src="{{friend.profile.pic.url}}" alt="" />
+                </div>
+                <div class="name">
+                    <h5>{{friend.profile.name}}</h5>
+                    <p>How are you doing today</p>
+                </div>
+                <div class="time_new_msg">
+                    {% comment %} <p>7:30am</p> {% endcomment %}
+
+                    <div class="msg">0</div>
+
+
+                </div>
+            </div>
+        </a>
+
+        {% endfor %}
+
+
+
+    </div>
+
+    <div class="footer">
+        <div>
+            <!-- add friend icon -->
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-person-plus"
+                viewBox="0 0 16 16">
+                <path
+                    d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                <path fill-rule="evenodd"
+                    d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
+            </svg>
+
+        </div>
+
+
+        <div>
+            <a href="{% url 'logout' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
+                    class="bi bi-door-open" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2.25 1.5A1.75 1.75 0 0 1 4 0h8a1.75 1.75 0 0 1 1.75 1.5v13a1.75 1.75 0 0 1-1.75 1.5h-8A1.75 1.75 0 0 1 2.25 14.5v-13zm1.75 0a.25.25 0 0 0-.25.25v12.5a.25.25 0 0 0 .25.25h8a.25.25 0 0 0 .25-.25v-12.5a.25.25 0 0 0-.25-.25h-8zm4.502 4.854a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L6.707 8H10.5a.5.5 0 0 0 0-1H6.707l1.545-1.646a.5.5 0 0 0 0-.708z" />
+                </svg>
+
+            </a>
+        </div>
+        <div>
+            <!-- change password -->
+            <a href="{% url 'change_password' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-lock"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M12.5 6.5A3.5 3.5 0 0 0 9 3a3.5 3.5 0 0 0-3.5 3.5V8h-.5a2.5 2.5 0 0 0-2.5 2.5v3a2.5 2.5 0 0 0 2.5 2.5h8a2.5 2.5 0 0 0 2.5-2.5v-3a2.5 2.5 0 0 0-2.5-2.5h-.5V6.5zm-3 0V6a1 1 0 0 1 2 0v.5a1 1 0 0 1-2 0zM5.5 8V6.5A2.5 2.5 0 0 1 8 4a2.5 2.5 0 0 1 2.5 2.5v1.5H5.5z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    setInterval(getNotification, 1000)
+
+    function getNotification() {
+        let url = "{% url 'notification' %}"
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                let chatNotificationBtn = document.getElementsByClassName("msg")
+                for (let i = 0; i < data.length; i++) {
+                    chatNotificationBtn[i].innerText = data[i]
+                }
+            })
+            .catch(error => console.log(error))
+    }
+
+
+</script>
+
+{% endblock %}
